@@ -22,6 +22,8 @@ We can build an application with Go (Golang) and compile it to WebAssembly (WASM
 ```bash
 go build -o srv _server/main.go 
 ```
+The main thing for server is "application/wasm" mime type for wasm files, some browsers require this.
+https://tinygo.org/docs/guides/webassembly/wasm/
 
 ### Build wasm with original go compiler
 
