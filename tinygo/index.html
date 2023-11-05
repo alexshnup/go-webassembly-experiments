@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>TinyGo WASM</title>
+</head>
+<body>
+    <script src="wasm_exec.js"></script>
+    <script>
+        // WebAssembly.instantiateStreaming(fetch('main.wasm'), {})
+        // .then((result) => {
+        //     // Assuming 'add' is the exported function you want to call
+        //     const add = result.instance.exports.add;
+        //     console.log("Add 2 + 3 =", add(2, 3));
+        // })
+        // .catch((err) => {
+        //     console.error("Failed to load WebAssembly module:", err);
+        // });
+        const go = new Go(); // Defined in wasm_exec.js
+        const WASM_URL = 'main.wasm';
+
+        var wasm;
+
+        if ('instantiateStreaming' in WebAssembly) {
+            WebAssembly.instantiateStreaming(fetch(WASM_URL), go.importObject).then(function (obj) {
+                wasm = obj.instance;
+                go.run(wasm);
+                console.log('add two numbers:', wasm.exports.add(2, 3));
+                console.log('multiplied two numbers:', wasm.exports.multiply(2, 3));
+            })
+        } else {
+            fetch(WASM_URL).then(resp =>
+                resp.arrayBuffer()
+            ).then(bytes =>
+                WebAssembly.instantiate(bytes, go.importObject).then(function (obj) {
+                    wasm = obj.instance;
+                    go.run(wasm);
+                })
+            )
+        }
+        // Providing the environment object, used in WebAssembly.instantiateStreaming.
+        // This part goes after "const go = new Go();" declaration.
+        // go.importObject.env = {
+        //     'add': function(x, y) {
+        //         return x + y
+        //     }
+        //     // ... other functions
+        // }
+
+        // // Calling the multiply function:
+        // console.log('multiplied two numbers:', wasm);
+    </script>
+</body>
+</html>
