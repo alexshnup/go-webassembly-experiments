@@ -18,10 +18,15 @@ Size main.wasm 2.1M
 
 ### Build wasm with tinygo
 
+
+
 ```bash
 cd tinygo
 ```
 
+Please note the file wasm_exec.js must match the version tinygo was compiled with.
+for latest version of tinygo it is located in tinygo/targets/wasm_exec.js
+https://github.com/tinygo-org/tinygo/blob/release/targets/wasm_exec.js
 
 ```bash
 tinygo build -o main.wasm -target=wasi -no-debug main.go
